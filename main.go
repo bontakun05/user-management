@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 
+	"github.com/bontakun05/user-management/server"
+
 	"git.bluebird.id/logistic/commons/config"
 	"git.bluebird.id/logistic/commons/constant"
-	"git.bluebird.id/logistic/user-management/server"
 )
 
 func main() {

@@ -11,8 +11,9 @@ import (
 	"git.bluebird.id/logistic/commons/config"
 	"git.bluebird.id/logistic/commons/constant"
 
-	gr "git.bluebird.id/logistic/commons/grpc"
 	"github.com/bontakun05/user-management/repository"
+
+	gr "git.bluebird.id/logistic/commons/grpc"
 )
 
 //Server server interface
