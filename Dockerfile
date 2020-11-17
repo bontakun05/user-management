@@ -1,5 +1,5 @@
 FROM gcr.io/distroless/static
 
-ADD vendors ./
-ENTRYPOINT ["./vendors"]
+ADD user-management ./
+ENTRYPOINT ["./user-management"]
 EXPOSE 9084
