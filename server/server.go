@@ -3,17 +3,17 @@ package server
 import (
 	"log"
 
-	"git.bluebird.id/logistic/armada/postgres"
 	"git.bluebird.id/logistic/commons/cert"
 	"git.bluebird.id/logistic/commons/logger"
 	"git.bluebird.id/logistic/kit"
+	"git.bluebird.id/logistic/orderqry/postgres"
 	"google.golang.org/grpc"
 
 	"git.bluebird.id/logistic/commons/config"
 	"git.bluebird.id/logistic/commons/constant"
 
 	gr "git.bluebird.id/logistic/commons/grpc"
-	"git.bluebird.id/logistic/user-management/repository"
+	"github.com/bontakun05/user-management/repository"
 )
 
 //Server server interface
