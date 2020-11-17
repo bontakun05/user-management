@@ -6,7 +6,6 @@ import (
 	"git.bluebird.id/logistic/commons/cert"
 	"git.bluebird.id/logistic/commons/logger"
 	"git.bluebird.id/logistic/kit"
-	"git.bluebird.id/logistic/orderqry/postgres"
 	"google.golang.org/grpc"
 
 	"git.bluebird.id/logistic/commons/config"
