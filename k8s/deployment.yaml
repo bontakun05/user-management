@@ -1,0 +1,127 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: user_management
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: user_management
+    spec:
+      volumes:
+        - name: certificate
+          secret:
+            secretName: ca-key
+        - name: ssl-certificate
+          secret:
+            secretName: bluebirdid-cert
+        - name: workdir
+          emptyDir: {}
+        - name: google-cloud-key
+          secret:
+            secretName: pubsub-key
+      containers:
+        - name: user_management
+          image: asia.gcr.io/$NAMESPACE/user_management:$BUILD_NUMBER
+          volumeMounts:
+            - name: certificate
+              mountPath: /var/secrets/ssl
+              readOnly: true
+            - name: ssl-certificate
+              mountPath: /var/ssl/cert
+              readOnly: true
+            - name: workdir
+              mountPath: /var/ssl
+            - name: google-cloud-key
+              mountPath: /var/secrets/google
+              readOnly: true
+          ports:
+            - containerPort: 9084
+          env:
+            - name: CA_CERT
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-user_management
+                  key: CA_CERT
+            - name: SERVER_CERT
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-user_management
+                  key: SERVER_CERT
+            - name: KEY_CERT
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-user_management
+                  key: KEY_CERT
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-user_management
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-user_management
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-user_management
+                  key: DB_NAME
+            - name: DB_OPTIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-user_management
+                  key: DB_OPTIONS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: secret-user_management
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-user_management
+                  key: DB_PASSWORD
+            - name: ADD_USER_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-user_management
+                  key: ADD_USER_TOPIC
+            - name: PUBSUB_PROJECT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-user_management
+                  key: PUBSUB_PROJECT_ID
+            - name: SUBSCRIBE_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-user_management
+                  key: SUBSCRIBE_ID
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/pubsub.json
+      initContainers:
+        - name: keytool
+          image: asia.gcr.io/$NAMESPACE/keytool:1.0.0
+          command:
+            - keytool
+            - "-cacert"
+            - "/var/secrets/ssl/ca-cert.pem"
+            - "-cakey"
+            - "/var/secrets/ssl/ca-key.pem"
+            - "-serverca"
+            - "/home/ca.pem"
+            - "-servercert"
+            - "/home/server.pem"
+            - "-serverkey"
+            - "/home/key.pem"
+            - "*.bluebird.id"
+            - "127.0.0.1"
+            - "user_management"
+          volumeMounts:
+            - name: certificate
+              mountPath: /var/secrets/ssl
+              readOnly: true
+            - name: workdir
+              mountPath: /home

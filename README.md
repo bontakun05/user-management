@@ -1,0 +1,1 @@
+Logistic User Management service
